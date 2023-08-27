@@ -7,7 +7,9 @@ const useStateWithReset = (initValue) => {
     [setState, initValue]
   );
   const useReactiveReset = (...dependencies) =>
-    useEffect(() => resetState(), [...dependencies]);
+    useEffect(() => {
+      if (state !== initValue) resetState();
+    }, [...dependencies]);
 
   return { state, setState, resetState, useReactiveReset };
 };
