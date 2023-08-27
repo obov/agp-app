@@ -33,10 +33,10 @@ export default function App() {
 
   const handleClickUser = (user) => () => {
     setUserSelected(user);
-    setCopyContent(defaultCopyMessage(user));
+    setCopyContent(defaultCopyMessage(user, month));
     openModal();
 
-    console.log(user);
+    console.log("in handle click", user);
   };
 
   const handleChangeCopyContent = (e) => {
@@ -51,7 +51,7 @@ export default function App() {
 
   useReactiveResetUserSelected(month);
 
-  // useLog(userDataForTable, "userData");
+  useLog(userDataForTable, "userData");
   // useLog(copyContent, "copyContent");
   // useLog(userSelected, "userSelected");
   // useLog(copyContent, "copyContent");
@@ -70,10 +70,10 @@ export default function App() {
     setIsOpen(true);
   };
   return (
-    <div className="fixed top-16 w-72">
+    <div className="fixed top-16 w-full">
       <ExcelInput setUserDataForTable={setUserDataForTable} />
       <MonthList monthes={monthes} onSelectMonth={handleSelectMonth} />
-      <table className="table-auto">
+      <table className="table-auto w-full">
         <thead>
           <tr>
             {TABLE_HEADER.map((header) => (
@@ -85,9 +85,9 @@ export default function App() {
           {nullIfNotExists(users, (users) =>
             users.map((user) => (
               <tr key={user.번호} onClick={handleClickUser(user)}>
-                <td>{user.번호}</td>
-                <td>{user.이름}</td>
-                <td>{user.금액}</td>
+                {TABLE_HEADER.map((header) => (
+                  <td key={header}>{user[header]}</td>
+                ))}
               </tr>
             ))
           )}

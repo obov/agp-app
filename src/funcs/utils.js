@@ -9,3 +9,19 @@ export const nullIfNotExists = (value, ifExist) =>
 export const copyText = (value) => {
   navigator.clipboard.writeText(value);
 };
+
+export const objectMap = (object, fn) => {
+  return Object.entries(object).reduce(
+    (acc, [key, value]) => ({
+      ...acc,
+      [key]: fn(value),
+    }),
+    {}
+  );
+};
+
+export const removeDuplication = (array) => Array.from(new Set(array));
+
+export const numberWithCommas = (x) => {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};

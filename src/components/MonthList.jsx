@@ -19,8 +19,9 @@ export default function MonthList({ monthes, onSelectMonth }) {
   useEffect(() => {
     if (monthesIsArrayAndHasDatas) {
       setSelected(monthes[0]);
+      onSelectMonth(monthes[0]);
     }
-  }, [monthes, monthesIsArrayAndHasDatas]);
+  }, [monthes, monthesIsArrayAndHasDatas, onSelectMonth]);
 
   useLog(monthes, "monthes");
 
@@ -62,13 +63,13 @@ export default function MonthList({ monthes, onSelectMonth }) {
                         selected ? "font-medium" : "font-normal"
                       }`}
                     >
-                      {person.name}
+                      {person}
                     </span>
-                    {selected ? (
+                    {nullIfNotExists(selected, () => (
                       <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
                         <CheckIcon className="h-5 w-5" aria-hidden="true" />
                       </span>
-                    ) : null}
+                    ))}
                   </>
                 )}
               </Listbox.Option>

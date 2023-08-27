@@ -1,5 +1,19 @@
 import { utils, readFile } from "xlsx";
-export const TABLE_HEADER = ["번호", "이름", "금액"];
+import { objectMap } from "./utils";
+export const TABLE_HEADER = [
+  "번호",
+  "이름",
+  "입소비",
+  "촉탁약값",
+  "약값1",
+  "약값2",
+  "도뇨관",
+  "L-tube",
+  "영양제",
+  "수액",
+  "케어웰",
+  "기타",
+];
 
 const readXlsx = (file) => {
   const filePromise = new Promise((resolve) => {
@@ -10,17 +24,8 @@ const readXlsx = (file) => {
       const bufferArray = e.target.result;
 
       const wb2 = readFile(bufferArray);
-      resolve({
-        //test sheet 만 꺼내는 중
-        test: utils.sheet_to_json(wb2.Sheets["test"], {
-          header: TABLE_HEADER,
-          range: "A2:C100",
-          raw: false,
-          blankrows: false,
-          defval: null,
-          dateNF: "YYYY-MM-DD",
-        }),
-      });
+      const jsonSheets = objectMap(wb2.Sheets, utils.sheet_to_json);
+      resolve(jsonSheets);
     };
   });
   return filePromise;
