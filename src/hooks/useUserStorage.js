@@ -27,7 +27,10 @@ const useUserStorage = () => {
       : // string 이 아닌 경우 적절한 구조를 가져야함
         setUsersFromSetter(JSON.stringify(users));
 
-  const users = useMemo(() => JSON.parse(usersFromSetter), [usersFromSetter]);
+  const users = useMemo(
+    () => (usersFromSetter === "" ? {} : JSON.parse(usersFromSetter)),
+    [usersFromSetter]
+  );
 
   useEffect(() => {
     !usersFromSetter || localStorage.setItem("users", usersFromSetter);
