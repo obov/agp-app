@@ -2,6 +2,7 @@ import {
   isNullOrUndefined,
   removeDuplication,
   numberWithCommas,
+  monthParser,
 } from "./utils";
 
 export const defaultCopyMessage = (user, month) => {
@@ -36,11 +37,6 @@ export const defaultCopyMessage = (user, month) => {
   }${
     userPrice("\n└기타 : ", user, "기타") //
   }`;
-};
-
-const monthParser = (month) => {
-  const [yy, mm] = month.split(".");
-  return `20${yy}년 ${Number(mm)}월`;
 };
 
 const calculateUserPrice = (user, keys) => {

@@ -25,3 +25,8 @@ export const removeDuplication = (array) => Array.from(new Set(array));
 export const numberWithCommas = (x) => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
+
+export const monthParser = (month) => {
+  const [yy, mm] = month.split(".");
+  return `20${yy}년 ${Number(mm)}월`;
+};
