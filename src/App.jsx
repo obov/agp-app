@@ -1,9 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import ExcelInput from "./components/ExcelInput";
 import { nullIfNotExists } from "./funcs/utils";
 import { TABLE_HEADER } from "./funcs/xlsxReader";
 import Modal from "./Modal";
 import useStateWithReset from "./hooks/useStateWithReset";
+import useLog from "./hooks/useLog";
+import { Dialog } from "@headlessui/react";
 
 export default function App() {
   const [userDataForTable, setUserDataForTable] = useState(null);
@@ -12,7 +14,7 @@ export default function App() {
   const {
     state: userSelected,
     setState: setUserSelected,
-    resetState: resetUserSelected,
+    useReactiveReset,
   } = useStateWithReset(null);
 
   const users = useMemo(
@@ -26,22 +28,20 @@ export default function App() {
     console.log(user);
   };
 
-  useEffect(() => {
-    resetUserSelected();
-  }, [month, resetUserSelected]);
+  useReactiveReset(month);
 
-  useEffect(() => {
-    console.log("userData", userDataForTable);
-  }, [userDataForTable]);
-  // let [value, setValue] = useState({ value: "" });
+  useLog(userDataForTable, "userData");
+  useLog(userSelected, "userSelected");
+
   const [isOpen, setIsOpen] = useState(false);
-  function closeModal() {
-    setIsOpen(false);
-  }
 
-  function openModal() {
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
+  const openModal = () => {
     setIsOpen(true);
-  }
+  };
   return (
     <div className="fixed top-16 w-72">
       <ExcelInput setUserDataForTable={setUserDataForTable} />
@@ -55,7 +55,6 @@ export default function App() {
         </button>
       </div> */}
 
-      <Modal isOpen={isOpen} closeModal={closeModal}></Modal>
       <table className="table-auto">
         <thead>
           <tr>
@@ -76,6 +75,29 @@ export default function App() {
           )}
         </tbody>
       </table>
+
+      <Modal isOpen={isOpen} closeModal={closeModal}>
+        <Dialog.Title
+          as="h3"
+          className="text-lg font-medium leading-6 text-gray-900"
+        >
+          세부 정보
+        </Dialog.Title>
+        <div className="mt-2">
+          <p className="text-sm text-gray-500">
+            {nullIfNotExists(userSelected, (userSelected) => userSelected.이름)}
+          </p>
+        </div>
+        <div className="mt-4">
+          <button
+            type="button"
+            className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+            onClick={closeModal}
+          >
+            Got it, thanks!
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 }
