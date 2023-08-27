@@ -30,3 +30,12 @@ export const monthParser = (month) => {
   const [yy, mm] = month.split(".");
   return `20${yy}년 ${Number(mm)}월`;
 };
+
+export const saveToArrayBuffer = (dataString) => {
+  const arrayBuffer = new ArrayBuffer(dataString.length);
+  const view = new Uint8Array(arrayBuffer);
+  for (let i = 0; i < dataString.length; i++) {
+    view[i] = dataString.charCodeAt(i) & 0xff;
+  }
+  return arrayBuffer;
+};

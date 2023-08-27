@@ -15,7 +15,6 @@ export default function MonthList({ monthes, onSelectMonth }) {
   };
 
   useEffect(() => {
-    console.log("selected", selected);
     const selectedIsNotExists = isNullOrUndefined(selected);
     if (monthesIsArrayAndHasDatas && selectedIsNotExists) {
       const firstValueForSelected = monthes[0];
@@ -30,7 +29,7 @@ export default function MonthList({ monthes, onSelectMonth }) {
   return (
     <Listbox value={selected} onChange={handleChangeSelect}>
       <div className="relative mt-1">
-        <Listbox.Button className="relative w-24 cursor-default rounded-lg bg-slate-50 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+        <Listbox.Button className="relative w-24 cursor-pointer rounded-lg bg-slate-50 hover:bg-blue-100 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
           <span className="flex items-center justify-center truncate h-6">
             {selected ? selected : "ads"}
           </span>
@@ -53,7 +52,7 @@ export default function MonthList({ monthes, onSelectMonth }) {
                 key={monthIdx}
                 className={({ active }) =>
                   `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                    active ? "bg-amber-100 text-amber-900" : "text-gray-900"
+                    active ? "bg-blue-100 text-blue-900" : "text-gray-900"
                   }`
                 }
                 value={month}
@@ -68,7 +67,7 @@ export default function MonthList({ monthes, onSelectMonth }) {
                       {month}
                     </span>
                     {selected ? (
-                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600">
                         <CheckIcon className="h-5 w-5" aria-hidden="true" />
                       </span>
                     ) : null}

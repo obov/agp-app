@@ -6,12 +6,16 @@ import {
   monthParser,
   nullIfNotExists,
 } from "./funcs/utils";
-import { TABLE_HEADER } from "./funcs/xlsxReader";
+import {
+  TABLE_HEADER,
+  downLoadXlsx,
+  downLoadXlsxExample,
+} from "./funcs/xlsx-utils";
 import Modal from "./Modal";
 import useStateWithReset from "./hooks/useStateWithReset";
 import useLog from "./hooks/useLog";
 import { Dialog } from "@headlessui/react";
-import defaultCopyMessage from "./funcs/defaultCopyMessage";
+import defaultCopyMessage from "./funcs/default-copy-message";
 import MonthList from "./components/monthList";
 import Button from "./components/Button";
 
@@ -53,8 +57,12 @@ export default function App() {
     }
   };
 
-  const handleClickDownload = () => {
-    console.log("download");
+  const handleDownload = () => {
+    downLoadXlsx();
+  };
+
+  const handleDownloadExample = () => {
+    downLoadXlsxExample();
   };
 
   useReactiveResetUserSelected(month);
@@ -83,10 +91,10 @@ export default function App() {
         <ExcelInput setUserDataForTable={setUserDataForTable} />
       </div>
       <div className="mx-2 inline-block">
-        <Button onClick={handleClickDownload} text={"현재 파일 다운로드"} />
+        <Button onClick={handleDownload} text={"현재 파일 다운로드"} />
       </div>
       <div className="mx-2 inline-block">
-        <Button onClick={handleClickDownload} text={"양식 다운로드"} />
+        <Button onClick={handleDownloadExample} text={"양식 다운로드"} />
       </div>
 
       <div className="h-4"></div>

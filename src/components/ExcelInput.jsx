@@ -1,5 +1,5 @@
 import useUserStorage from "../hooks/useUserStorage";
-import { readXlsx } from "../funcs/xlsxReader";
+import { readXlsx } from "../funcs/xlsx-utils";
 import { useEffect } from "react";
 
 const ExcelInput = ({ setUserDataForTable }) => {

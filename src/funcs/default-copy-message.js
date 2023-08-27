@@ -5,13 +5,28 @@ import {
   monthParser,
 } from "./utils";
 
+const DEFAULT_USER = {
+  번호: 0,
+  이름: "",
+  입소비: 0,
+  촉탁약값: 0,
+  약값1: 0,
+  약값2: 0,
+  도뇨관: 0,
+  "L-tube": 0,
+  영양제: 0,
+  수액: 0,
+  케어웰: 0,
+  기타: 0,
+};
+
 export const defaultCopyMessage = (user, month) => {
   return `아가페요양원입니다 \n${user.이름} 님의 ${monthParser(
     month
   )} 요양원비 입니다.${
     userPrice("\n합계 : ", user) //
   }${
-    userPrice("\n입소비 : ", user, ["입소비"]) //
+    userPrice("\n입소비 : ", user, "입소비") //
   }${
     userPrice("\n약값 합계 : ", user, [
       "촉탁약값",
@@ -40,31 +55,33 @@ export const defaultCopyMessage = (user, month) => {
 };
 
 const calculateUserPrice = (user, keys) => {
+  const userWithDefaultValues = setDefault(user);
   const noKeysOrEmpty = isNullOrUndefined(keys) || keys.length === 0;
   if (noKeysOrEmpty) {
-    const totalSum =
-      user.입소비 +
-      user.촉탁약값 +
-      user.약값1 +
-      user.약값2 +
-      user.도뇨관 +
-      user["L-tube"] +
-      user.영양제 +
-      user.수액 +
-      user.케어웰 +
-      user.기타;
-
-    return totalSum;
+    return calculateUserPrice(user, [
+      "입소비",
+      "촉탁약값",
+      "약값1",
+      "약값2",
+      "도뇨관",
+      "L-tube",
+      "영양제",
+      "수액",
+      "케어웰",
+      "기타",
+    ]);
   }
 
   const isOneKey = typeof keys === "string";
   if (isOneKey) {
-    return user[keys];
+    return userWithDefaultValues[keys];
   }
 
   const uniqeKeys = removeDuplication(keys);
-  return uniqeKeys.reduce((acc, key) => acc + user[key], 0);
+  return uniqeKeys.reduce((acc, key) => acc + userWithDefaultValues[key], 0);
 };
+
+const setDefault = (user) => ({ ...DEFAULT_USER, ...user });
 
 const addSurfix = (value, surfix) => `${value}${surfix}`;
 
