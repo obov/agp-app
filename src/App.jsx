@@ -112,7 +112,7 @@ export default function App() {
                 <tr
                   key={user.번호}
                   onClick={handleClickUser(user)}
-                  className="hover:bg-slate-100"
+                  className="hover:bg-slate-100 cursor-pointer"
                 >
                   {TABLE_HEADER.map((header) => (
                     <td key={header}>{user[header]}</td>
