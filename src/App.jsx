@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import ExcelInput from "./components/ExcelInput";
-import { nullIfNotExists } from "./funcs/utils";
+import { copyText, nullIfNotExists } from "./funcs/utils";
 import { TABLE_HEADER } from "./funcs/xlsxReader";
 import Modal from "./Modal";
 import useStateWithReset from "./hooks/useStateWithReset";
@@ -33,6 +33,10 @@ export default function App() {
     console.log(user);
   };
 
+  const handleChangeCopyContent = (e) => {
+    setCopyContent(e.target.value);
+  };
+
   useReactiveResetUserSelected(month);
 
   useLog(userDataForTable, "userData");
@@ -42,7 +46,11 @@ export default function App() {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const closeModal = () => {
+  const handleCloseModalCancel = () => {
+    setIsOpen(false);
+  };
+  const handleCloseModalCopy = () => {
+    copyText(copyContent);
     setIsOpen(false);
   };
 
@@ -83,7 +91,7 @@ export default function App() {
         </tbody>
       </table>
 
-      <Modal isOpen={isOpen} closeModal={closeModal}>
+      <Modal isOpen={isOpen} closeModal={handleCloseModalCancel}>
         <Dialog.Title
           as="h3"
           className="text-lg font-medium leading-6 text-gray-900"
@@ -107,14 +115,14 @@ export default function App() {
           rows="4"
           className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
           value={copyContent}
-          onChange={(e) => setCopyContent(e.target.value)}
+          onChange={handleChangeCopyContent}
         ></textarea>
 
         <div className="mt-4">
           <button
             type="button"
             className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-            onClick={closeModal}
+            onClick={handleCloseModalCopy}
           >
             Got it, thanks!
           </button>

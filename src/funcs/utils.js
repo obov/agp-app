@@ -5,3 +5,7 @@ export const isExists = (value) => !isNullOrUndefined(value);
 
 export const nullIfNotExists = (value, ifExist) =>
   isExists(value) ? ifExist(value) || value : null;
+
+export const copyText = (value) => {
+  navigator.clipboard.writeText(value);
+};
