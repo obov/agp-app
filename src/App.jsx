@@ -3,27 +3,33 @@ import ExcelInput from "./components/ExcelInput";
 import { nullIfNotExists } from "./funcs/utils";
 import { TABLE_HEADER } from "./funcs/xlsxReader";
 import Modal from "./Modal";
+import useStateWithReset from "./hooks/useStateWithReset";
 
 export default function App() {
   const [userDataForTable, setUserDataForTable] = useState(null);
   const [month, setMonth] = useState("test");
-  const [userIndexSelected, setUserIndexSelected] = useState(null);
 
+  const {
+    state: userSelected,
+    setState: setUserSelected,
+    resetState: resetUserSelected,
+  } = useStateWithReset(null);
 
   const users = useMemo(
     () => (userDataForTable ? userDataForTable[month] : null),
     [month, userDataForTable]
   );
-  const userSelected = useMemo(() => {
-    const value = "";
-    return { value, month, users, userIndexSelected };
-  }, [users, month, userIndexSelected]);
 
   const handleClickUser = (user) => () => {
-    setUserIndexSelected(user.번호);
+    setUserSelected(user);
     openModal();
     console.log(user);
   };
+
+  useEffect(() => {
+    resetUserSelected();
+  }, [month, resetUserSelected]);
+
   useEffect(() => {
     console.log("userData", userDataForTable);
   }, [userDataForTable]);
