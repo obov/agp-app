@@ -1,4 +1,4 @@
-import { useState } from "react";
+// import { useState } from "react";
 import useUserStorage from "./hooks/useUserStorage";
 
 const people = [
@@ -11,9 +11,9 @@ const people = [
 ];
 
 export default function App() {
-  let [value, setValue] = useState({ value: "" });
-  console.log(value);
-  useUserStorage({ users: value });
+  // let [value, setValue] = useState({ value: "" });
+  const [users, setUsers] = useUserStorage();
+  console.log(users);
   // let [isOpen, setIsOpen] = useState(false);
   // function closeModal() {
   //   setIsOpen(false);
@@ -35,7 +35,7 @@ export default function App() {
       </div> */}
       <input
         type="text"
-        onChange={(e) => setValue({ value: e.target.value })}
+        onChange={(e) => setUsers({ value: e.target.value })}
       ></input>
 
       {/* <Modal isOpen={isOpen} closeModal={closeModal}></Modal> */}
