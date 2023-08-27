@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 
 const usersExistsBefore = localStorage.getItem("users");
 
+const userSubscribers = new Set();
+
 /**
  * userDatas키에 월별 고객데이터 저장
  * ex) users = {
@@ -13,6 +15,11 @@ const useUserStorage = () => {
   const [usersFromSetter, setUsersFromSetter] = useState(
     usersExistsBefore ? usersExistsBefore : ""
   );
+
+  const addSubscriber = (subscriber) => {
+    subscriber(users);
+    userSubscribers.add(subscriber);
+  };
 
   const setUsers = (users) =>
     typeof users === "string"
@@ -26,7 +33,14 @@ const useUserStorage = () => {
     !usersFromSetter || localStorage.setItem("users", usersFromSetter);
   }, [usersFromSetter]);
 
-  return [users, setUsers];
+  useEffect(() => {
+    userSubscribers.forEach((subscriber) => {
+      subscriber(users);
+    });
+    return () => userSubscribers.clear();
+  }, [users]);
+
+  return { users, setUsers, addSubscriber };
 };
 
 export default useUserStorage;

@@ -1,10 +1,9 @@
-import { utils, writeFile, readFile } from "xlsx";
 import useUserStorage from "../hooks/useUserStorage";
 import { readXlsx } from "../funcs/xlsxReader";
 import { useEffect } from "react";
 
-const ExcelInput = () => {
-  const [users, setUsers] = useUserStorage();
+const ExcelInput = ({ setUserDataForTable }) => {
+  const { setUsers, addSubscriber } = useUserStorage();
 
   const handleChangeXlsxFile = async (e) => {
     const xlsx = await readXlsx(e.target.files[0]);
@@ -12,8 +11,10 @@ const ExcelInput = () => {
   };
 
   useEffect(() => {
-    console.log("users", users);
-  }, [users]);
+    addSubscriber((users) => {
+      setUserDataForTable(users);
+    });
+  }, [addSubscriber, setUserDataForTable]);
 
   return (
     <input

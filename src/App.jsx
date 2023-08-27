@@ -1,15 +1,19 @@
+import { useEffect, useMemo, useState } from "react";
 import ExcelInput from "./components/ExcelInput";
-
-const people = [
-  { name: "Wade Cooper" },
-  { name: "Arlene Mccoy" },
-  { name: "Devon Webb" },
-  { name: "Tom Cook" },
-  { name: "Tanya Fox" },
-  { name: "Hellen Schmidt" },
-];
+import { nullIfNotExists } from "./funcs/utils";
+import { TABLE_HEADER } from "./funcs/xlsxReader";
 
 export default function App() {
+  const [userDataForTable, setUserDataForTable] = useState(null);
+  const [month, setMonth] = useState("test");
+  const users = useMemo(
+    () => (userDataForTable ? userDataForTable[month] : null),
+    [month, userDataForTable]
+  );
+
+  useEffect(() => {
+    console.log("userData", userDataForTable);
+  }, [userDataForTable]);
   // let [value, setValue] = useState({ value: "" });
   // let [isOpen, setIsOpen] = useState(false);
   // function closeModal() {
@@ -21,7 +25,7 @@ export default function App() {
   // }
   return (
     <div className="fixed top-16 w-72">
-      <ExcelInput />
+      <ExcelInput setUserDataForTable={setUserDataForTable} />
       {/* <div className="fixed inset-0 flex items-center justify-center">
         <button
           type="button"
@@ -36,19 +40,21 @@ export default function App() {
       <table className="table-auto">
         <thead>
           <tr>
-            <th>Song</th>
-            <th>Artist</th>
-            <th>Year</th>
+            {TABLE_HEADER.map((header) => (
+              <th key={header}>{header}</th>
+            ))}
           </tr>
         </thead>
         <tbody>
-          {people.map((p) => (
-            <tr key={p.name}>
-              <td>{p.name}</td>
-              <td>{p.name}</td>
-              <td>{p.name}</td>
-            </tr>
-          ))}
+          {nullIfNotExists(users, (users) =>
+            users.map((user) => (
+              <tr key={user.번호}>
+                <td>{user.번호}</td>
+                <td>{user.이름}</td>
+                <td>{user.금액}</td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>

@@ -1,7 +1,5 @@
-import { utils, writeFile, readFile, read } from "xlsx";
-// const fileReader = new FileReader();
-// fileReader.onload = () => { };
-const TABLE_HEADER = ["번호", "이름", "금액"];
+import { utils, readFile } from "xlsx";
+export const TABLE_HEADER = ["번호", "이름", "금액"];
 
 const readXlsx = (file) => {
   const filePromise = new Promise((resolve) => {
