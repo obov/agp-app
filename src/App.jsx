@@ -35,7 +35,7 @@ export default function App() {
   const monthes = isNullOrUndefined(userDataForTable)
     ? []
     : Object.keys(userDataForTable);
-  const [month, setMonth] = useState(null);
+  const [month, setMonth] = useState("");
 
   const {
     state: userSelected,
