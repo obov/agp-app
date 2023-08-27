@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 
-const useLog = (valueForLog, logMessage = "log") => {
+const useLog = (valueForLog, logMessage = "log", callback = (v) => v) => {
   useEffect(() => {
-    console.log(`${logMessage} : `, valueForLog);
+    console.log(`${logMessage} : `, callback(valueForLog));
   }, [valueForLog, logMessage]);
   return;
 };

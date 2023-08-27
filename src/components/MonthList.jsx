@@ -1,15 +1,13 @@
 import { Fragment, useEffect, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
-import { nullIfNotExists } from "../funcs/utils";
+import { isNullOrUndefined } from "../funcs/utils";
 import useLog from "../hooks/useLog";
 
 export default function MonthList({ monthes, onSelectMonth }) {
   const monthesIsArrayAndHasDatas =
     Array.isArray(monthes) && monthes.length > 0;
-  const [selected, setSelected] = useState(
-    monthesIsArrayAndHasDatas ? monthes[0] : null
-  );
+  const [selected, setSelected] = useState(null);
 
   const handleChangeSelect = (e) => {
     setSelected(e);
@@ -17,20 +15,24 @@ export default function MonthList({ monthes, onSelectMonth }) {
   };
 
   useEffect(() => {
-    if (monthesIsArrayAndHasDatas) {
-      setSelected(monthes[0]);
-      onSelectMonth(monthes[0]);
+    console.log("selected", selected);
+    const selectedIsNotExists = isNullOrUndefined(selected);
+    if (monthesIsArrayAndHasDatas && selectedIsNotExists) {
+      const firstValueForSelected = monthes[0];
+      setSelected(firstValueForSelected);
+      onSelectMonth(firstValueForSelected);
     }
-  }, [monthes, monthesIsArrayAndHasDatas, onSelectMonth]);
+  }, [monthes, monthesIsArrayAndHasDatas, onSelectMonth, selected]);
 
   useLog(monthes, "monthes");
+  useLog(selected, "selected", (selected) => typeof selected);
 
   return (
     <Listbox value={selected} onChange={handleChangeSelect}>
       <div className="relative mt-1">
-        <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-          <span className="block truncate">
-            {nullIfNotExists(selected, (selected) => selected.name)}
+        <Listbox.Button className="relative w-24 cursor-default rounded-lg bg-slate-50 py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+          <span className="flex items-center justify-center truncate h-6">
+            {selected ? selected : "ads"}
           </span>
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
             <ChevronUpDownIcon
@@ -45,16 +47,16 @@ export default function MonthList({ monthes, onSelectMonth }) {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-            {monthes.map((person, personIdx) => (
+          <Listbox.Options className="absolute mt-1 max-h-60 w-36 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+            {monthes.map((month, monthIdx) => (
               <Listbox.Option
-                key={personIdx}
+                key={monthIdx}
                 className={({ active }) =>
                   `relative cursor-default select-none py-2 pl-10 pr-4 ${
                     active ? "bg-amber-100 text-amber-900" : "text-gray-900"
                   }`
                 }
-                value={person}
+                value={month}
               >
                 {({ selected }) => (
                   <>
@@ -63,13 +65,13 @@ export default function MonthList({ monthes, onSelectMonth }) {
                         selected ? "font-medium" : "font-normal"
                       }`}
                     >
-                      {person}
+                      {month}
                     </span>
-                    {nullIfNotExists(selected, () => (
+                    {selected ? (
                       <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
                         <CheckIcon className="h-5 w-5" aria-hidden="true" />
                       </span>
-                    ))}
+                    ) : null}
                   </>
                 )}
               </Listbox.Option>
