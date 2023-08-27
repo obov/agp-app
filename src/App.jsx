@@ -6,6 +6,7 @@ import Modal from "./Modal";
 import useStateWithReset from "./hooks/useStateWithReset";
 import useLog from "./hooks/useLog";
 import { Dialog } from "@headlessui/react";
+import defaultCopyMessage from "./funcs/defaultCopyMessage";
 
 export default function App() {
   const [userDataForTable, setUserDataForTable] = useState(null);
@@ -14,7 +15,7 @@ export default function App() {
   const {
     state: userSelected,
     setState: setUserSelected,
-    useReactiveReset,
+    useReactiveReset: useReactiveResetUserSelected,
   } = useStateWithReset(null);
 
   const users = useMemo(
@@ -22,16 +23,22 @@ export default function App() {
     [month, userDataForTable]
   );
 
+  const [copyContent, setCopyContent] = useState("");
+
   const handleClickUser = (user) => () => {
     setUserSelected(user);
+    setCopyContent(defaultCopyMessage(user));
     openModal();
+
     console.log(user);
   };
 
-  useReactiveReset(month);
+  useReactiveResetUserSelected(month);
 
   useLog(userDataForTable, "userData");
+  useLog(copyContent, "copyContent");
   useLog(userSelected, "userSelected");
+  useLog(copyContent, "copyContent");
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -88,6 +95,21 @@ export default function App() {
             {nullIfNotExists(userSelected, (userSelected) => userSelected.이름)}
           </p>
         </div>
+
+        <label
+          htmlFor="message"
+          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >
+          Your message
+        </label>
+        <textarea
+          id="message"
+          rows="4"
+          className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
+          value={copyContent}
+          onChange={(e) => setCopyContent(e.target.value)}
+        ></textarea>
+
         <div className="mt-4">
           <button
             type="button"
