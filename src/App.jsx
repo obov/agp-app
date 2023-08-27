@@ -2,27 +2,40 @@ import { useEffect, useMemo, useState } from "react";
 import ExcelInput from "./components/ExcelInput";
 import { nullIfNotExists } from "./funcs/utils";
 import { TABLE_HEADER } from "./funcs/xlsxReader";
+import Modal from "./Modal";
 
 export default function App() {
   const [userDataForTable, setUserDataForTable] = useState(null);
   const [month, setMonth] = useState("test");
+  const [userIndexSelected, setUserIndexSelected] = useState(null);
+
+
   const users = useMemo(
     () => (userDataForTable ? userDataForTable[month] : null),
     [month, userDataForTable]
   );
+  const userSelected = useMemo(() => {
+    const value = "";
+    return { value, month, users, userIndexSelected };
+  }, [users, month, userIndexSelected]);
 
+  const handleClickUser = (user) => () => {
+    setUserIndexSelected(user.번호);
+    openModal();
+    console.log(user);
+  };
   useEffect(() => {
     console.log("userData", userDataForTable);
   }, [userDataForTable]);
   // let [value, setValue] = useState({ value: "" });
-  // let [isOpen, setIsOpen] = useState(false);
-  // function closeModal() {
-  //   setIsOpen(false);
-  // }
+  const [isOpen, setIsOpen] = useState(false);
+  function closeModal() {
+    setIsOpen(false);
+  }
 
-  // function openModal() {
-  //   setIsOpen(true);
-  // }
+  function openModal() {
+    setIsOpen(true);
+  }
   return (
     <div className="fixed top-16 w-72">
       <ExcelInput setUserDataForTable={setUserDataForTable} />
@@ -36,7 +49,7 @@ export default function App() {
         </button>
       </div> */}
 
-      {/* <Modal isOpen={isOpen} closeModal={closeModal}></Modal> */}
+      <Modal isOpen={isOpen} closeModal={closeModal}></Modal>
       <table className="table-auto">
         <thead>
           <tr>
@@ -48,7 +61,7 @@ export default function App() {
         <tbody>
           {nullIfNotExists(users, (users) =>
             users.map((user) => (
-              <tr key={user.번호}>
+              <tr key={user.번호} onClick={handleClickUser(user)}>
                 <td>{user.번호}</td>
                 <td>{user.이름}</td>
                 <td>{user.금액}</td>
