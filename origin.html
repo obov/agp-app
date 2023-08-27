@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
+    <style>
+        .xx-small { font-size: xx-small; }
+        .x-small { font-size: x-small; }
+        .small { font-size: small; }
+        .medium { font-size: medium; }
+        .large { font-size: large; }
+        .x-large { font-size: x-large; }
+        .xx-large { font-size: xx-large; }
+        .fixedheader{
+            position: sticky;
+            top: 0;
+        }
+        table tfoot{
+            position: sticky;
+            bottom: 0;
+        }
+        .details, .xlsx, .ribtn, .lebtn  {
+            cursor: pointer;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function($){
+            "use strict"
+            const clipboard = navigator.clipboard
+            function numberWithCommas(x) {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            function setYYMM() {
+                var today = new Date();
+                var yy = today.getFullYear()+'';
+                var mm = today.getMonth()+2+'';
+                $('#yymm').data('yy',yy);
+                $('#yymm').data('mm',mm);
+                $('#yymm').text(`${yy}년 ${mm}월`)
+            }            
+            
+            $('#caption').append(`<div class="container d-flex flex-row bd-highlight mb-6 fs-6">
+                            <div class="lebtn p-2">
+                                <i class="bi bi-arrow-left-circle-fill"></i>
+                            </div>
+                            <div id="yymm" class="p-2">
+                            
+                            </div>
+                            <div class="ribtn p-2">
+                                <i class="bi bi-arrow-right-circle-fill"></i>
+                            </div>
+                        </div>
+            `)
+            setYYMM()
+            $('.ribtn').on('click',function(){
+                var yy = parseInt($('#yymm').data('yy'))
+                var mm = parseInt($('#yymm').data('mm'))
+                mm == 12 ? mm = 1 : mm += 1 
+                mm == 1 ? yy += 1 : yy = yy
+                mm += ''
+                yy += ''
+                $('#yymm').data('yy',yy)
+                $('#yymm').data('mm',mm)
+                var in_txt = `${yy}년 ${mm}월`
+                $('#yymm').text(in_txt)
+            })
+            $('.lebtn').on('click',function(){
+                var yy = parseInt($('#yymm').data('yy'))
+                var mm = parseInt($('#yymm').data('mm'))                
+                mm == 1 ? mm = 12 : mm -= 1
+                mm == 12 ? yy -= 1 : yy = yy
+                mm += ''
+                yy += ''
+                $('#yymm').data('yy',yy)
+                $('#yymm').data('mm',mm)
+                var in_txt = `${yy}년 ${mm}월`
+                $('#yymm').text(in_txt)
+            })
+            $('#copy').on('click',function(){
+                var cptext = $('#textarea').val();
+                var label = $('#textarea').next();
+                clipboard.writeText(cptext);
+                $('#textarea').val('');
+                label.text('복사되었습니다.')
+            });
+        })(jQuery)
+        if (a==b) {
+            
+        }
+
+    </script>
+    <title>보호자청구작업</title>
+</head>
+
+<body>
+    <script>
+        function readExcel() {
+            function nulltozero(x) {
+                if(typeof x == "undefined" || x == null || x == ""){
+                    return '0'
+                } else {
+                    return x
+                }
+            }
+            function nulltonum(x) {
+                if(typeof x == "undefined" || x == null || x == ""){
+                    return 0
+                } else {
+                    return x
+                }
+            }
+            function numberWithCommas(x) {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            let input = event.target;
+            let reader = new FileReader();
+            
+            reader.onload = function () {
+                let data = reader.result;
+                let workBook = XLSX.read(data, { type: 'binary' });
+                let rows = XLSX.utils.sheet_to_json(workBook.Sheets['Sheet1']);
+                console.log(workBook.Sheets);
+                var tbl = $('.dt');
+                var sums = [0,0,0]
+                rows.forEach((cl, i)=> {
+                    var newcl = {
+                        '번호' : i+1,
+                        '이름' : nulltozero(cl['이름']),
+                        'd총합' : nulltozero(cl['총합']), '총합' : numberWithCommas(nulltozero(cl['총합'])),
+                        'd입소비' : nulltozero(cl['입소비']), '입소비' : numberWithCommas(nulltozero(cl['입소비'])),
+                        'd약값합계' : nulltozero(cl['약값합계']), '약값합계' : numberWithCommas(nulltozero(cl['약값합계'])),
+                        'd진료비' : nulltozero(cl['진료비']), '진료비' : numberWithCommas(nulltozero(cl['진료비'])),
+                        'd촉탁약값' : nulltozero(cl['촉탁약값']), '촉탁약값' : numberWithCommas(nulltozero(cl['촉탁약값'])),
+                        'd약값1' : nulltozero(cl['약값1']), '약값1' : numberWithCommas(nulltozero(cl['약값1'])),
+                        'd약값2' : nulltozero(cl['약값2']), '약값2' : numberWithCommas(nulltozero(cl['약값2'])),
+                        'd도뇨관콧줄' : nulltozero(cl['도뇨관콧줄']), '도뇨관콧줄' : numberWithCommas(nulltozero(cl['도뇨관콧줄'])),
+                        'd영양제수액' : nulltozero(cl['영양제수액']), '영양제수액' : numberWithCommas(nulltozero(cl['영양제수액'])),
+                        'd케어웰' : nulltozero(cl['케어웰']), '케어웰' : numberWithCommas(nulltozero(cl['케어웰'])),
+                        'd기타' : nulltozero(cl['기타']), '기타' : numberWithCommas(nulltozero(cl['기타'])),                            
+                    }
+                    sums = [ sums[0]+newcl['d총합']*1, sums[1]+newcl['d입소비']*1, sums[2]+newcl['d약값합계']*1 ]
+                    var rowtoappend = `
+                    <tr>
+                                <th rowspan="2" scope="row" data-no="${newcl['번호']}">${newcl['번호']}</th>
+                                <td class="nm" data-nm="${newcl['이름']}">${newcl['이름']}</td>
+                                <td class="tt" data-tt="${newcl['d총합']}">${newcl['총합']}</td>
+                                <td class="co" data-co="${newcl['d입소비']}">${newcl['입소비']}</td>
+                                <td class="md" data-md="${newcl['d약값합계']}">${newcl['약값합계']}</td>
+                                <td class="dl">
+                                    <button class="btn btn-dark detailcheck" type="button" data-bs-toggle="collapse" data-bs-target="#extra_charge_details${newcl['번호']}" aria-expanded="false" aria-controls="multiCollapseExample2">
+                                        
+                                    </button>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-dark copycheck" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                        
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="details">
+                                <td colspan="6">
+                                    <table class="table table-bordered table-sm mb-0 collapse multi-collapse medium" id="extra_charge_details${newcl['번호']}">
+                                        <thead>
+                                            <th scope="col">진료비</th>
+                                            <th scope="col">촉탁약값</th>
+                                            <th scope="col">약값1</th>
+                                            <th scope="col">약값2</th>
+                                            <th scope="col">도뇨관&콧줄</th>
+                                            <th scope="col">영양제수액</th>
+                                            <th scope="col">케어웰</th>
+                                            <th scope="col">기타</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="md00" data-val=${newcl['d진료비']}>${newcl['진료비']}</td>
+                                                <td class="md01" data-val=${newcl['d촉탁약값']}>${newcl['촉탁약값']}</td>
+                                                <td class="md02" data-val=${newcl['d약값1']}>${newcl['약값1']}</td>
+                                                <td class="md03" data-val=${newcl['d약값2']}>${newcl['약값2']}</td>
+                                                <td class="md04" data-val=${newcl['d도뇨관콧줄']}>${newcl['도뇨관콧줄']}</td>
+                                                <td class="md05" data-val=${newcl['d영양제수액']}>${newcl['영양제수액']}</td>
+                                                <td class="md06" data-val=${newcl['d케어웰']}>${newcl['케어웰']}</td>
+                                                <td class="md07" data-val=${newcl['d기타']}>${newcl['기타']}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                    `
+                    // console.log(rowtoappend)
+                    tbl.append(rowtoappend)
+
+                    
+                    
+                }); //foreach
+                $('.copycheck').on('click',function(){
+                        var row = $(this).parent().parent();
+                        var drow = row.next().children('td').children('table').children('tbody').children('tr');
+                        var nm = row.children('td.nm').text();
+                        var tt = row.children('td.tt').text();
+                        var co = row.children('td.co').text();
+                        var md = row.children('td.md').text();
+                        var md00 = nulltonum(parseInt(drow.children('td.md00').data('val')));
+                        var md01 = nulltonum(parseInt(drow.children('td.md01').data('val')));
+                        var md02 = nulltonum(parseInt(drow.children('td.md02').data('val')));
+                        var md03 = nulltonum(parseInt(drow.children('td.md03').data('val')));
+                        var md04 = nulltonum(parseInt(drow.children('td.md04').data('val')));
+                        var md05 = nulltonum(parseInt(drow.children('td.md05').data('val')));
+                        var md06 = nulltonum(parseInt(drow.children('td.md06').data('val')));
+                        var md07 = nulltonum(parseInt(drow.children('td.md07').data('val')));
+                        var text1 = ''
+                        var text2 = ''
+                        var text3 = ''
+                        var text4 = ''
+                        var text5 = ''
+                        var yymm = $('#yymm').text()
+                        // var text2 
+                        md01 == 0 ? text1 = '' : text1 = `
+└촉탁약값 : ${numberWithCommas(md00+md01)} 원`
+                        md02 == 0 ? text2 = '' : text2 = `
+└병원비 : ${numberWithCommas(md02)} 원`
+                        md04 == 0 ? text3 = '' : text3 = `
+└L-tube 또는 도뇨관 : ${numberWithCommas(md04)} 원`
+                        md05 == 0 ? text4 = '' : text4 = `
+└수액 : ${numberWithCommas(md05)} 원`
+                        md06 == 0 ? text5 = '' : text5 = `
+└케어웰 : ${numberWithCommas(md06)} 원`
+                        md07 == 0 ? text6 = '' : text6 = `
+└기타 : ${numberWithCommas(md07)} 원`
+                        var copy_msg = 
+        `아가페요양원입니다.
+"${nm}"님의 ${yymm.replace(/\n/g, "").replace(/\s*/g, "").replace(/년/g,"년 ")} 요양원비 입니다
+합계 : ${tt} 원
+입소비 : ${co} 원
+약값 : ${md} 원${text1}${text2}${text3}${text4}${text5}${text6}`
+                        $('#textarea').val(copy_msg); 
+                    })
+                $('.details').on('click',function(){
+                    $(this).prev().children('td.dl').children('.btn').trigger('click');
+                    
+                })
+                $('.btn-md-close').on('click',function() {
+                    var label = $('#textarea').next();
+                    label.text('복사될 문구입니다.')
+                })
+                $('#ttsum').text(numberWithCommas(sums[0]));
+                $('#ttsum').data('val',sums[0]);
+                $('#cosum').text(numberWithCommas(sums[1]));
+                $('#cosum').data('val',sums[1]);
+                $('#mdsum').text(numberWithCommas(sums[2]));
+                $('#mdsum').data('val',sums[2]);
+            };
+                
+                reader.readAsBinaryString(input.files[0]);
+        }
+        
+        // ------------------------------------------------------------------------------------scripts ends here
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <nav class="navbar navbar-expand-lg navbar-light bg-dark bg-gradient"  style="--bs-bg-opacity: .8;">
+        <div class="container">
+            <a class="navbar-brand  text-white">청구발송</a>
+            <div class="">
+                <div class="collapse">
+                    <input id="readExcel"class="form-control" type="file" onchange="readExcel()" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                </div>
+                <div class="xlsx fs-4 text-white" onclick="clickExcel()">
+                    <i class="bi bi-filetype-xlsx"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <main>
+        <div class="container">
+            <div class="row flex-nowrap">
+                <table class="table table-hover caption-top text-center fs-5"  style="table-layout: fixed;">
+                    <caption id="caption">
+                    </caption>
+                    <thead style="position: sticky;">
+
+                        <tr class="fs-6 table-light">
+                            <th class="fixedheader" width ="4%"scope="col">#</th>
+                            <th class="fixedheader" width ="8%"scope="col">이름</th>
+                            <th class="fixedheader" width ="30%"scope="col">입소비 + 약값</th>
+                            <th class="fixedheader" width ="20%"scope="col">입소비</th>
+                            <th class="fixedheader" width ="20%"scope="col">약값</th>
+                            <th class="fixedheader" width ="9%"scope="col">
+                                <i class="bi bi-card-checklist fs-4"></i>
+                            </th>
+                            <th class="fixedheader" width ="9%"scope="col">
+                                <i class="bi bi-chat-dots fs-4"></i>
+                                
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="align-middle dt">
+                        
+                    </tbody>
+                    <tfoot id="footer" class="table-secondary">
+                        <th scope="row" colspan="2">합계</th>
+                        <td id="ttsum"></td>
+                        <td id="cosum"></td>
+                        <td id="mdsum"></td>
+                        <td></td>
+                        <td></td>
+                    </tfoot>
+                </table>
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <button type="button" class="btn-close btn-md-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="modal-dialog modal-dialog-scrollable">
+                                ...
+                            </div>
+                            <div class="form-floating">
+                                <textarea id="textarea" class="form-control" placeholder="Leave a comment here" id="floatingTextarea" style="height: 300px"></textarea>
+                                <label for="floatingTextarea">복사될 문구입니다</label>
+                            </div>  
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary btn-md-close" data-bs-dismiss="modal">Close</button>
+                            <button id="copy" type="button" class="btn btn-primary">Copy</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        function clickExcel() {
+            $('#readExcel').trigger('click')
+        }    
+    </script>
+</body>
+</html>

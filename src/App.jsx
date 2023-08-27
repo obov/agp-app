@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Modal from "./Modal";
+import useUserStorage from "./hooks/useUserStorage";
 
 const people = [
   { name: "Wade Cooper" },
@@ -11,17 +11,20 @@ const people = [
 ];
 
 export default function App() {
-  let [isOpen, setIsOpen] = useState(false);
-  function closeModal() {
-    setIsOpen(false);
-  }
+  let [value, setValue] = useState({ value: "" });
+  console.log(value);
+  useUserStorage({ users: value });
+  // let [isOpen, setIsOpen] = useState(false);
+  // function closeModal() {
+  //   setIsOpen(false);
+  // }
 
-  function openModal() {
-    setIsOpen(true);
-  }
+  // function openModal() {
+  //   setIsOpen(true);
+  // }
   return (
     <div className="fixed top-16 w-72">
-      <div className="fixed inset-0 flex items-center justify-center">
+      {/* <div className="fixed inset-0 flex items-center justify-center">
         <button
           type="button"
           onClick={openModal}
@@ -29,8 +32,13 @@ export default function App() {
         >
           Open dialog
         </button>
-      </div>
-      <Modal isOpen={isOpen} closeModal={closeModal}></Modal>
+      </div> */}
+      <input
+        type="text"
+        onChange={(e) => setValue({ value: e.target.value })}
+      ></input>
+
+      {/* <Modal isOpen={isOpen} closeModal={closeModal}></Modal> */}
       <table className="table-auto">
         <thead>
           <tr>
