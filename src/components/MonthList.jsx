@@ -52,7 +52,7 @@ export default function MonthList({ monthes, onSelectMonth }) {
                 key={monthIdx}
                 className={({ active }) =>
                   `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                    active ? "bg-blue-100 text-blue-900" : "text-gray-900"
+                    active ? "bg-blue-50 text-blue-900" : "text-gray-900"
                   }`
                 }
                 value={month}
@@ -60,7 +60,7 @@ export default function MonthList({ monthes, onSelectMonth }) {
                 {({ selected }) => (
                   <>
                     <span
-                      className={`block truncate ${
+                      className={`block truncate cursor-pointer ${
                         selected ? "font-medium" : "font-normal"
                       }`}
                     >

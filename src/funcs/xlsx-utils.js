@@ -33,17 +33,9 @@ export const readXlsx = (file) => {
   return filePromise;
 };
 
-export const downLoadXlsx = () => {
-  const jsonData = {
-    23.08: [
-      { Name: "John", Age: 25 },
-      { Name: "Jane", Age: 30 },
-      { Name: "Doe", Age: 22 },
-    ],
-  };
-
+export const downLoadXlsx = (userData) => {
   const workBook = utils.book_new();
-  Object.entries(jsonData).forEach(([key, value]) => {
+  Object.entries(userData).forEach(([key, value]) => {
     const workSheet = utils.json_to_sheet(value);
     utils.book_append_sheet(workBook, workSheet, key);
   });

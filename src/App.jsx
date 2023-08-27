@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ExcelInput from "./components/ExcelInput";
 import {
   copyText,
@@ -11,16 +11,25 @@ import {
   downLoadXlsx,
   downLoadXlsxExample,
 } from "./funcs/xlsx-utils";
-import Modal from "./Modal";
+import Modal from "./components/Modal";
 import useStateWithReset from "./hooks/useStateWithReset";
 import useLog from "./hooks/useLog";
 import { Dialog } from "@headlessui/react";
 import defaultCopyMessage from "./funcs/default-copy-message";
 import MonthList from "./components/monthList";
 import Button from "./components/Button";
+import useUserStorage from "./hooks/useUserStorage";
 
 export default function App() {
   const [userDataForTable, setUserDataForTable] = useState(null);
+  const { users: userData, addSubscriber, setUsers } = useUserStorage();
+
+  useEffect(() => {
+    addSubscriber((users) => {
+      setUserDataForTable(users);
+    });
+  }, [addSubscriber, setUserDataForTable]);
+
   // 비효율적인 렌더링 가능성,,
   // const stigified = JSON.stringify(userDataForTable);
   const monthes = isNullOrUndefined(userDataForTable)
@@ -58,7 +67,7 @@ export default function App() {
   };
 
   const handleDownload = () => {
-    downLoadXlsx();
+    downLoadXlsx(userData);
   };
 
   const handleDownloadExample = () => {
@@ -88,7 +97,7 @@ export default function App() {
   return (
     <div className="fixed top-16 w-full">
       <div className="mx-2 inline-block">
-        <ExcelInput setUserDataForTable={setUserDataForTable} />
+        <ExcelInput setUsers={setUsers} />
       </div>
       <div className="mx-2 inline-block">
         <Button onClick={handleDownload} text={"현재 파일 다운로드"} />
