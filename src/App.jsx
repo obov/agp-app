@@ -1,5 +1,4 @@
-// import { useState } from "react";
-import useUserStorage from "./hooks/useUserStorage";
+import ExcelInput from "./components/ExcelInput";
 
 const people = [
   { name: "Wade Cooper" },
@@ -12,8 +11,6 @@ const people = [
 
 export default function App() {
   // let [value, setValue] = useState({ value: "" });
-  const [users, setUsers] = useUserStorage();
-  console.log(users);
   // let [isOpen, setIsOpen] = useState(false);
   // function closeModal() {
   //   setIsOpen(false);
@@ -24,6 +21,7 @@ export default function App() {
   // }
   return (
     <div className="fixed top-16 w-72">
+      <ExcelInput />
       {/* <div className="fixed inset-0 flex items-center justify-center">
         <button
           type="button"
@@ -33,10 +31,6 @@ export default function App() {
           Open dialog
         </button>
       </div> */}
-      <input
-        type="text"
-        onChange={(e) => setUsers({ value: e.target.value })}
-      ></input>
 
       {/* <Modal isOpen={isOpen} closeModal={closeModal}></Modal> */}
       <table className="table-auto">
