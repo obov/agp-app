@@ -16,7 +16,7 @@ import useStateWithReset from "./hooks/useStateWithReset";
 import useLog from "./hooks/useLog";
 import { Dialog } from "@headlessui/react";
 import defaultCopyMessage from "./funcs/default-copy-message";
-import MonthList from "./components/monthList";
+import MonthList from "./components/MonthList";
 import Button from "./components/Button";
 import useUserStorage from "./hooks/useUserStorage";
 
