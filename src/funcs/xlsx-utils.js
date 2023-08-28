@@ -44,7 +44,7 @@ export const downLoadXlsx = (userData) => {
   const blob = new Blob([saveToArrayBuffer(workBookData)], {
     type: "application/octet-stream",
   });
-  saveAs(blob, "example.xlsx");
+  saveAs(blob, "청구데이터.xlsx");
 };
 
 export const downLoadXlsxExample = () => {
